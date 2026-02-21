@@ -179,6 +179,8 @@ int term_read(void)
 		ibuf_pos = 0;
 	}
 	c = ibuf_pos < ibuf_cnt ? (unsigned char) ibuf[ibuf_pos++] : -1;
+	if (c == '\r')
+		c = '\n';
 	if (icmd_pos < sizeof(icmd))
 		icmd[icmd_pos++] = c;
 	return c;
