@@ -22,6 +22,7 @@ void term_init(void)
 	newtermios = termios;
 	newtermios.c_lflag &= ~(ICANON | ISIG);
 	newtermios.c_lflag &= ~ECHO;
+	newtermios.c_oflag &= ~OPOST; // Disable output processing
 	term_sbuf = sbuf_make();
 	tcsetattr(0, TCSAFLUSH, &newtermios);
 	if (getenv("LINES"))
@@ -190,9 +191,10 @@ char *term_seqattr(int att, int old)
 	char *s = buf;
 	int fg = SYN_FG(att);
 	int bg = SYN_BG(att);
+	int n = 0;
 	if (att == old)
 		return "";
-	s += sprintf(s, "\33[");
+	s += sprintf(s, "\33[0");
 	if (att & SYN_BD)
 		s += sprintf(s, ";1");
 	if (att & SYN_IT)
